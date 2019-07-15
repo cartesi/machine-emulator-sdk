@@ -1,0 +1,9 @@
+[submodule "emulator"]
+	path = emulator
+	url = git@github.com:cartesi/machine-emulator.git
+[submodule "rom"]
+	path = rom
+	url = git@github.com:cartesi/machine-emulator-rom.git
+[submodule "tests"]
+	path = tests
+	url = git@github.com:cartesi/machine-tests.git
