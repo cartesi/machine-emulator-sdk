@@ -57,7 +57,7 @@ toolchain-env:
 		-w $(CONTAINER_BASE) cartesi/toolchain-env:v1 $(CONTAINER_COMMAND)
 
 build-toolchain-env:
-	docker build -t cartesi/toolchain-env:v1 tools/toolchain-env
+	docker build -t cartesi/toolchain-env:v1 toolchain-env
 
 
-.PHONY: all submodules clean $(SRCDIRS) $(SRCCLEAN)
+.PHONY: all submodules clean toolchain-env build-toolchain-env $(SRCDIRS) $(SRCCLEAN)
