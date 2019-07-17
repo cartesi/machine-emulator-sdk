@@ -12,6 +12,8 @@ The Cartesi Machine Emulator SDK repository.
 ### Build
 
 ```bash
+$ make submodules
+$ make build-toolchain-env
 $ make
 ```
 

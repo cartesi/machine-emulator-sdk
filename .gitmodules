@@ -7,3 +7,9 @@
 [submodule "tests"]
 	path = tests
 	url = git@github.com:cartesi/machine-tests.git
+[submodule "fs"]
+	path = fs
+	url = git@github.com:cartesi/image-rootfs.git
+[submodule "kernel"]
+	path = kernel
+	url = git@github.com:cartesi/image-kernel.git
