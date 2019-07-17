@@ -16,9 +16,9 @@ RUN \
     apt-get install --no-install-recommends -y \
         build-essential autoconf automake libtool libtool-bin autotools-dev \
         git make pkg-config patchutils gawk bison flex ca-certificates \
-        device-tree-compiler libmpc-dev libmpfr-dev libgmp-dev \
+        device-tree-compiler libmpc-dev libmpfr-dev libgmp-dev rsync cpio \
         libusb-1.0-0-dev texinfo gperf bc zlib1g-dev libncurses-dev \
-        wget vim wget curl zip unzip libexpat-dev python3 help2man && \
+        wget vim wget curl zip unzip libexpat-dev python python3 help2man && \
     rm -rf /var/lib/apt/lists/*
 
 
