@@ -55,6 +55,14 @@ The following options are available to initialize and build the software artifac
 - **fs**: builds the rootfs.ext2 image (requires toolchain)
 - **kernel**: builds the kernel image (requires toolchain)
 
+If you want to test the emulator you use:
+
+- **run-tests**: runs the emulator tests (requires emulator and tests)
+
+If you want install the SDK artifacts:
+
+- **install**: installs the SDK artifacts (requires emulator, rom, tests, fs and kernel)
+
 If you want to use the linux environments you can also use the following targets:
 
 - **toolchain-env**: enters the docker image-toolchain environment
@@ -91,8 +99,27 @@ $ make toolchain-env TOOLCHAIN_TAG=0.1.1
 
 OBS: Outside tagged commits the default tag is `devel`, which means you have to build the images on your machine.
 
+## Testing
+
+```
+$ make run-tests
+
+```
+
+## Installing
+
+```
+$ make install
+
+```
+
 ## Usage
 
+```
+$ export PATH=/opt/cartesi/bin:$PATH
+$ cd /opt/cartesi/share/
+$ cartesi-machine
+```
 TODO
 
 ## Contributing

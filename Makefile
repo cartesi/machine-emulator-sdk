@@ -5,6 +5,18 @@ TOOLCHAIN_TAG ?= devel
 FS_TAG        ?= devel
 KERNEL_TAG    ?= devel
 
+# Install settings
+PREFIX= /opt/cartesi
+SHARE_INSTALL_PATH= $(PREFIX)/share
+
+INSTALL= install -p
+INSTALL_EXEC= $(INSTALL) -m 0755
+INSTALL_DATA= $(INSTALL) -m 0644
+
+FS_TO_SHARE= rootfs.ext2
+KERNEL_TO_SHARE= kernel.bin
+ROM_TO_SHARE= rom.bin
+
 SRCDIRS := emulator rom tests
 SRCCLEAN := $(addsuffix .clean,$(SRCDIRS))
 SRCDISTC := $(addsuffix .distclean,$(SRCDIRS))
@@ -24,8 +36,8 @@ clean: $(SRCCLEAN)
 
 distclean: $(SRCDISTC)
 
-$(BUILDDIR):
-	mkdir -p $(BUILDDIR)
+$(BUILDDIR) $(SHARE_INSTALL_PATH):
+	mkdir -p $@
 
 submodules:
 	git submodule update --init --recursive
@@ -53,7 +65,11 @@ build-rom:
 build-tests:
 	cd tests && \
 	    $(MAKE) dep EMULATOR_INC=$(EMULATOR_INC) && \
-	    $(MAKE) EMULATOR_INC=$(EMULATOR_INC)
+	    $(MAKE) EMULATOR_INC=$(EMULATOR_INC) && \
+	    $(MAKE) copy-riscv-tests
+
+run-tests:
+	$(MAKE) -C emulator test TEST_PATH=`pwd`/tests/build
 
 fs-env:
 	@docker run --hostname $@ -it --rm \
@@ -90,5 +106,11 @@ toolchain-exec:
 fs kernel toolchain:
 	$(MAKE) -C $@ TAG=$($(shell echo $@ | tr a-z A-Z)_TAG) TOOLCHAIN_TAG=$(TOOLCHAIN_TAG)
 
+install: $(SHARE_INSTALL_PATH)
+	$(MAKE) -C emulator install
+	$(MAKE) -C tests install
+	cd fs && $(INSTALL_DATA) $(FS_TO_SHARE) $(SHARE_INSTALL_PATH)
+	cd kernel && $(INSTALL_DATA) $(KERNEL_TO_SHARE) $(SHARE_INSTALL_PATH)
+	cd rom/build && $(INSTALL_DATA) $(ROM_TO_SHARE) $(SHARE_INSTALL_PATH)
 
 .PHONY: all submodules clean fs kernel toolchain fs-env kernel-env toolchain-env $(SRCDIRS) $(SRCCLEAN)
