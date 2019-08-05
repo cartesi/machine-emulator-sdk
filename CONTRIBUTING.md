@@ -4,11 +4,13 @@ This Contributor Agreement is between Cartesi Foundation Ltd. (“Cartesi”) an
 or other entity identified below (“the Contributor”).
  
 For individuals:
+
        	Contributor Name: ___________________________________________________
 
        	Github Username: ___________________________________________________
  
 For organizations:
+
        	Contributing Organization: _____________________________________________
  
        	Authorizing Individual: ________________________________________________
@@ -35,8 +37,10 @@ in this Contributor Agreement shall be interpreted to prohibit Contributor from 
 Contributions under different terms from the Incoming License or this Contributor Agreement.
  
 For Cartesi:
+
        	Signed: ___________________________________________________________
        	Name:   Erick de Moura Ferreira
  
 For Contributor:
+
        	Signed: __________________________________________________________
