@@ -56,6 +56,7 @@ submodules:
 	git submodule update --init --recursive
 
 emulator:
+	$(MAKE) -C $@ downloads
 	$(MAKE) -C $@ dep
 	$(MAKE) -C $@
 
