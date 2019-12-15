@@ -37,7 +37,7 @@ SRCDISTC := $(addsuffix .distclean,$(SRCDIRS))
 CONTAINER_BASE := /opt/cartesi/machine-emulator-sdk
 CONTAINER_MAKE := /usr/bin/make
 
-EMULATOR_INC = $(CONTAINER_BASE)/emulator/src
+EMULATOR_INC = $(CONTAINER_BASE)/emulator/lib/machine-emulator-defines
 RISCV_CFLAGS :=-march=rv64ima -mabi=lp64
 
 all:
@@ -53,7 +53,8 @@ $(BUILDDIR) $(SHARE_INSTALL_PATH):
 	mkdir -p $@
 
 submodules:
-	git submodule update --init --recursive
+	git submodule update --init --recursive emulator fs kernel toolchain
+	git submodule update --init rom tests
 
 emulator:
 	$(MAKE) -C $@ downloads
