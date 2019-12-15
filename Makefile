@@ -105,7 +105,7 @@ toolchain-env:
 		-e GID=$$(id -g) \
 		-v `pwd`:$(CONTAINER_BASE) \
 		-w $(CONTAINER_BASE) \
-		cartesi/image-toolchain:$(TOOLCHAIN_TAG) $(CONTAINER_COMMAND)
+		cartesi/toolchain:$(TOOLCHAIN_TAG) $(CONTAINER_COMMAND)
 
 toolchain-exec:
 	docker run --hostname $@ --rm \
@@ -115,7 +115,7 @@ toolchain-exec:
 		-e GID=$$(id -g) \
 		-v `pwd`:$(CONTAINER_BASE) \
 		-w $(CONTAINER_BASE) \
-		cartesi/image-toolchain:$(TOOLCHAIN_TAG) $(CONTAINER_COMMAND)
+		cartesi/toolchain:$(TOOLCHAIN_TAG) $(CONTAINER_COMMAND)
 
 fs kernel toolchain:
 	$(MAKE) -C $@ TAG=$($(shell echo $@ | tr a-z A-Z)_TAG) TOOLCHAIN_TAG=$(TOOLCHAIN_TAG)
