@@ -21,14 +21,15 @@ KERNEL_TAG    ?= devel
 # Install settings
 PREFIX= /opt/cartesi
 SHARE_INSTALL_PATH= $(PREFIX)/share
+IMAGES_INSTALL_PATH= $(SHARE_INSTALL_PATH)/images
 
 INSTALL= install -p
 INSTALL_EXEC= $(INSTALL) -m 0755
 INSTALL_DATA= $(INSTALL) -m 0644
 
-FS_TO_SHARE= rootfs.ext2
-KERNEL_TO_SHARE= kernel.bin
-ROM_TO_SHARE= rom.bin
+FS_TO_IMAGES= rootfs.ext2
+KERNEL_TO_IMAGES= linux-5.5.19-ctsi-2.bin
+ROM_TO_IMAGES= rom.bin
 
 SRCDIRS := emulator rom tests
 SRCCLEAN := $(addsuffix .clean,$(SRCDIRS))
@@ -49,7 +50,7 @@ clean: $(SRCCLEAN)
 
 distclean: $(SRCDISTC)
 
-$(BUILDDIR) $(SHARE_INSTALL_PATH):
+$(BUILDDIR) $(IMAGES_INSTALL_PATH):
 	mkdir -p $@
 
 submodules:
@@ -121,11 +122,12 @@ toolchain-exec:
 fs kernel toolchain:
 	$(MAKE) -C $@ TAG=$($(shell echo $@ | tr a-z A-Z)_TAG) TOOLCHAIN_TAG=$(TOOLCHAIN_TAG)
 
-install: $(SHARE_INSTALL_PATH)
+install: $(IMAGES_INSTALL_PATH)
 	$(MAKE) -C emulator install
 	$(MAKE) -C tests install
-	cd fs && $(INSTALL_DATA) $(FS_TO_SHARE) $(SHARE_INSTALL_PATH)
-	cd kernel && $(INSTALL_DATA) $(KERNEL_TO_SHARE) $(SHARE_INSTALL_PATH)
-	cd rom/build && $(INSTALL_DATA) $(ROM_TO_SHARE) $(SHARE_INSTALL_PATH)
+	cd fs && $(INSTALL_DATA) $(FS_TO_IMAGES) $(IMAGES_INSTALL_PATH)
+	cd kernel && $(INSTALL_DATA) $(KERNEL_TO_IMAGES) $(IMAGES_INSTALL_PATH)
+	cd rom/build && $(INSTALL_DATA) $(ROM_TO_IMAGES) $(IMAGES_INSTALL_PATH)
+	cd $(IMAGES_INSTALL_PATH) && ln -s $(KERNEL_TO_IMAGES) linux.bin
 
 .PHONY: all submodules clean fs kernel toolchain fs-env kernel-env toolchain-env $(SRCDIRS) $(SRCCLEAN)
