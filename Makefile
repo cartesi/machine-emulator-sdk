@@ -18,6 +18,19 @@ TOOLCHAIN_TAG ?= devel
 FS_TAG        ?= devel
 KERNEL_TAG    ?= devel
 
+FS_TOOLCHAIN_TAG     := $(TOOLCHAIN_TAG)
+KERNEL_TOOLCHAIN_TAG := $(TOOLCHAIN_TAG)
+ROM_TOOLCHAIN_TAG    := $(TOOLCHAIN_TAG)
+TESTS_TOOLCHAIN_TAG  := $(TOOLCHAIN_TAG)
+
+ifeq ($(fd_emulation),yes)
+TOOLCHAIN_TAG        := $(TOOLCHAIN_TAG)-fd-emulation
+KERNEL_TAG           := $(KERNEL_TAG)-fd-emulation
+FS_TAG               := $(FS_TAG)-fd-emulation
+# Only the fs needs the fd-emulation toolchain
+FS_TOOLCHAIN_TAG     := $(TOOLCHAIN_TAG)
+endif
+
 # Install settings
 PREFIX= /opt/cartesi
 SHARE_INSTALL_PATH= $(PREFIX)/share
@@ -39,7 +52,8 @@ CONTAINER_BASE := /opt/cartesi/machine-emulator-sdk
 CONTAINER_MAKE := /usr/bin/make
 
 EMULATOR_INC = $(CONTAINER_BASE)/emulator/lib/machine-emulator-defines
-RISCV_CFLAGS :=-march=rv64ima -mabi=lp64
+
+UPPER = $(shell echo '$1' | tr '[:lower:]' '[:upper:]')
 
 all:
 	@echo "Usage: make [option]\n"
@@ -64,7 +78,9 @@ emulator:
 
 rom tests:
 	$(MAKE) -C $@ downloads EMULATOR_INC=true
-	$(MAKE) toolchain-exec CONTAINER_COMMAND="$(CONTAINER_MAKE) build-$@"
+	$(MAKE) toolchain-exec \
+	    TOOLCHAIN_TAG=$($(call UPPER,$@)_TOOLCHAIN_TAG) \
+	    CONTAINER_COMMAND="$(CONTAINER_MAKE) build-$@ fd_emulation=$(fd_emulation)"
 
 $(SRCCLEAN): %.clean:
 	$(MAKE) -C $* clean
@@ -74,7 +90,6 @@ $(SRCDISTC): %.distclean:
 
 build-rom:
 	cd rom && \
-	    export CFLAGS="$(RISCV_CFLAGS)" && \
 	    make dep EMULATOR_INC=$(EMULATOR_INC) && \
 	    make EMULATOR_INC=$(EMULATOR_INC)
 
@@ -119,8 +134,13 @@ toolchain-exec:
 		-w $(CONTAINER_BASE) \
 		cartesi/toolchain:$(TOOLCHAIN_TAG) $(CONTAINER_COMMAND)
 
-fs kernel toolchain:
-	$(MAKE) -C $@ TAG=$($(shell echo $@ | tr a-z A-Z)_TAG) TOOLCHAIN_TAG=$(TOOLCHAIN_TAG)
+fs kernel:
+	$(MAKE) -C $@ \
+	    TAG=$($(call UPPER,$@)_TAG) \
+	    TOOLCHAIN_TAG=$($(call UPPER,$@)_TOOLCHAIN_TAG)
+
+toolchain:
+	$(MAKE) -C $@ TOOLCHAIN_TAG=$(TOOLCHAIN_TAG)
 
 install: $(IMAGES_INSTALL_PATH)
 	$(MAKE) -C emulator install
