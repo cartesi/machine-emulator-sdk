@@ -142,6 +142,11 @@ fs kernel:
 toolchain:
 	$(MAKE) -C $@ TOOLCHAIN_TAG=$(TOOLCHAIN_TAG)
 
+create-symlinks:
+	@ln -srvf rom/build/$(ROM_TO_IMAGES) emulator/src/rom.bin
+	@ln -srvf fs/$(FS_TO_IMAGES) emulator/src/rootfs.ext2
+	@ln -srvf kernel/$(KERNEL_TO_IMAGES) emulator/src/linux.bin
+
 install: $(IMAGES_INSTALL_PATH)
 	$(MAKE) -C emulator install
 	$(MAKE) -C tests install
