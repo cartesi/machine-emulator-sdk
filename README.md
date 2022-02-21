@@ -20,23 +20,7 @@ For documentation on each of this artifacts please see their own repositories.
 - Docker 18.x
 - C/C++ Compiler with support for C++17 (tested with GCC >= 8+).
 - GNU Make >= 3.81
-
-#### Ubuntu 18.04
-
-```
-$ apt-get install build-essential automake libtool patchelf wget git libreadline-dev libboost-container-dev libboost-program-options-dev libboost-serialization-dev ca-certificates
-```
-#### MacOS
-
-##### MacPorts
-```
-sudo port install clang-8.0 automake boost libtool wget
-```
-
-##### Homebrew
-```
-brew install llvm automake boost libomp wget
-```
+- Dependencies listed in the [emulator submodule](../../../machine-emulator/blob/master/README.md).
 
 ### Build
 
