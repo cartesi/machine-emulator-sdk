@@ -51,8 +51,6 @@ SRCDISTC := $(addsuffix .distclean,$(SRCDIRS))
 CONTAINER_BASE := /opt/cartesi/machine-emulator-sdk
 CONTAINER_MAKE := /usr/bin/make
 
-EMULATOR_INC = $(CONTAINER_BASE)/emulator/lib/machine-emulator-defines
-
 UPPER = $(shell echo '$1' | tr '[:lower:]' '[:upper:]')
 
 all:
@@ -68,22 +66,15 @@ $(BUILDDIR) $(IMAGES_INSTALL_PATH):
 	mkdir -p $@
 
 submodules:
-	git submodule update --init --recursive emulator fs kernel toolchain rom
-	git submodule update --init tests
+	git submodule update --init --recursive emulator fs kernel toolchain rom tests
 
 emulator:
 	$(MAKE) -C $@ downloads
 	$(MAKE) -C $@ dep
 	$(MAKE) -C $@
 
-rom:
+rom tests:
 	$(MAKE) -C $@ downloads
-	$(MAKE) toolchain-exec \
-	    TOOLCHAIN_TAG=$($(call UPPER,$@)_TOOLCHAIN_TAG) \
-	    CONTAINER_COMMAND="$(CONTAINER_MAKE) build-$@ fd_emulation=$(fd_emulation)"
-
-tests:
-	$(MAKE) -C $@ downloads EMULATOR_INC=true
 	$(MAKE) toolchain-exec \
 	    TOOLCHAIN_TAG=$($(call UPPER,$@)_TOOLCHAIN_TAG) \
 	    CONTAINER_COMMAND="$(CONTAINER_MAKE) build-$@ fd_emulation=$(fd_emulation)"
@@ -101,9 +92,9 @@ build-rom:
 
 build-tests:
 	cd tests && \
-	    $(MAKE) dep EMULATOR_INC=$(EMULATOR_INC) && \
-	    $(MAKE) EMULATOR_INC=$(EMULATOR_INC) && \
-	    $(MAKE) copy-riscv-tests
+	    $(MAKE) dep && \
+	    $(MAKE) && \
+	    $(MAKE)
 
 run-tests:
 	$(MAKE) -C emulator test TEST_PATH=`pwd`/tests/build
