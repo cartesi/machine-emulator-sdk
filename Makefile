@@ -41,7 +41,7 @@ INSTALL_EXEC= $(INSTALL) -m 0755
 INSTALL_DATA= $(INSTALL) -m 0644
 
 FS_TO_IMAGES= rootfs.ext2
-KERNEL_TO_IMAGES= linux-5.5.19-ctsi-6.bin
+KERNEL_TO_IMAGES= linux-5.15.63-ctsi-1.bin
 ROM_TO_IMAGES= rom.bin
 
 SRCDIRS := emulator rom tests
