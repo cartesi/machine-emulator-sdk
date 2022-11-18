@@ -42,7 +42,7 @@ INSTALL_DATA= $(INSTALL) -m 0644
 
 FS_TO_IMAGES= rootfs.ext2
 KERNEL_TO_IMAGES= linux-5.15.63-ctsi-1.bin
-ROM_TO_IMAGES= rom.bin
+ROM_TO_IMAGES= rom-v0.13.0.bin
 
 SRCDIRS := emulator rom tests
 SRCCLEAN := $(addsuffix .clean,$(SRCDIRS))
@@ -68,15 +68,21 @@ $(BUILDDIR) $(IMAGES_INSTALL_PATH):
 	mkdir -p $@
 
 submodules:
-	git submodule update --init --recursive emulator fs kernel toolchain
-	git submodule update --init rom tests
+	git submodule update --init --recursive emulator fs kernel toolchain rom
+	git submodule update --init tests
 
 emulator:
 	$(MAKE) -C $@ downloads
 	$(MAKE) -C $@ dep
 	$(MAKE) -C $@
 
-rom tests:
+rom:
+	$(MAKE) -C $@ downloads
+	$(MAKE) toolchain-exec \
+	    TOOLCHAIN_TAG=$($(call UPPER,$@)_TOOLCHAIN_TAG) \
+	    CONTAINER_COMMAND="$(CONTAINER_MAKE) build-$@ fd_emulation=$(fd_emulation)"
+
+tests:
 	$(MAKE) -C $@ downloads EMULATOR_INC=true
 	$(MAKE) toolchain-exec \
 	    TOOLCHAIN_TAG=$($(call UPPER,$@)_TOOLCHAIN_TAG) \
@@ -90,8 +96,8 @@ $(SRCDISTC): %.distclean:
 
 build-rom:
 	cd rom && \
-	    make dep EMULATOR_INC=$(EMULATOR_INC) && \
-	    make EMULATOR_INC=$(EMULATOR_INC)
+	    make dep && \
+	    make
 
 build-tests:
 	cd tests && \
