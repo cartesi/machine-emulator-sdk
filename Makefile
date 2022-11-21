@@ -40,7 +40,7 @@ INSTALL= install -p
 INSTALL_EXEC= $(INSTALL) -m 0755
 INSTALL_DATA= $(INSTALL) -m 0644
 
-FS_TO_IMAGES= rootfs.ext2
+FS_TO_IMAGES= rootfs-v0.15.0.ext2
 KERNEL_TO_IMAGES= linux-5.15.63-ctsi-1.bin
 ROM_TO_IMAGES= rom-v0.13.0.bin
 
