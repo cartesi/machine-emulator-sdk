@@ -23,14 +23,6 @@ KERNEL_TOOLCHAIN_TAG := $(TOOLCHAIN_TAG)
 ROM_TOOLCHAIN_TAG    := $(TOOLCHAIN_TAG)
 TESTS_TOOLCHAIN_TAG  := $(TOOLCHAIN_TAG)
 
-ifeq ($(fd_emulation),yes)
-TOOLCHAIN_TAG        := $(TOOLCHAIN_TAG)-fd-emulation
-KERNEL_TAG           := $(KERNEL_TAG)-fd-emulation
-FS_TAG               := $(FS_TAG)-fd-emulation
-# Only the fs needs the fd-emulation toolchain
-FS_TOOLCHAIN_TAG     := $(TOOLCHAIN_TAG)
-endif
-
 # Install settings
 PREFIX= /opt/cartesi
 SHARE_INSTALL_PATH= $(PREFIX)/share
@@ -77,7 +69,7 @@ rom tests:
 	$(MAKE) -C $@ downloads
 	$(MAKE) toolchain-exec \
 	    TOOLCHAIN_TAG=$($(call UPPER,$@)_TOOLCHAIN_TAG) \
-	    CONTAINER_COMMAND="$(CONTAINER_MAKE) build-$@ fd_emulation=$(fd_emulation)"
+	    CONTAINER_COMMAND="$(CONTAINER_MAKE) build-$@"
 
 $(SRCCLEAN): %.clean:
 	$(MAKE) -C $* clean
