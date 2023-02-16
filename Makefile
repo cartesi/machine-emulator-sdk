@@ -34,7 +34,7 @@ INSTALL_DATA= $(INSTALL) -m 0644
 
 FS_TO_IMAGES= rootfs-v0.15.0.ext2
 KERNEL_TO_IMAGES= linux-5.15.63-ctsi-1.bin
-ROM_TO_IMAGES= rom-v0.13.0.bin
+ROM_TO_IMAGES= rom-v0.15.0.bin
 
 SRCDIRS := emulator rom tests
 SRCCLEAN := $(addsuffix .clean,$(SRCDIRS))
@@ -143,5 +143,6 @@ install: $(IMAGES_INSTALL_PATH)
 	cd kernel && $(INSTALL_DATA) $(KERNEL_TO_IMAGES) $(IMAGES_INSTALL_PATH)
 	cd rom/build && $(INSTALL_DATA) $(ROM_TO_IMAGES) $(IMAGES_INSTALL_PATH)
 	cd $(IMAGES_INSTALL_PATH) && ln -s $(KERNEL_TO_IMAGES) linux.bin
+	cd $(IMAGES_INSTALL_PATH) && ln -s $(ROM_TO_IMAGES) rom.bin
 
 .PHONY: all submodules clean fs kernel toolchain fs-env kernel-env toolchain-env $(SRCDIRS) $(SRCCLEAN)
