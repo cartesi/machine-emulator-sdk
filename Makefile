@@ -85,7 +85,6 @@ build-rom:
 build-tests:
 	cd tests && \
 	    $(MAKE) dep && \
-	    $(MAKE) && \
 	    $(MAKE)
 
 run-tests:
