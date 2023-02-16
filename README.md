@@ -1,10 +1,10 @@
 > :warning: The Cartesi team keeps working internally on the next version of this repository, following its regular development roadmap. Whenever there's a new version ready or important fix, these are published to the public source tree as new releases.
 
-# Cartesi Machine Emulator SDK 
+# Cartesi Machine Emulator SDK
 
 The Cartesi Machine Emulator SDK repository provides a structured way to build the off-chain emulator binaries. The current version builds:
 
-- The RISC-V GNU GCC toolchain 
+- The RISC-V GNU GCC toolchain
 - The Cartesi Machine Emulator
 - The Cartesi Machine Emulator ROM
 - The Emulator Tests
@@ -41,9 +41,9 @@ $ make kernel
 Cleaning:
 
 ```bash
-$ make clean 
+$ make clean
 or
-$ make distclean 
+$ make distclean
 ```
 
 #### Makefile targets
@@ -102,37 +102,6 @@ $ make toolchain-env TOOLCHAIN_TAG=0.1.1
 
 OBS: Outside tagged commits the default tag is `devel`, which means you have to build the images on your machine.
 
-#### Building SDK with support to float-point emulation
-
-The standard Cartesi-machine SDK supports only the IMA extensions for RISC-V.
-This SDK does not support float-point instructions; executing code with such instructions causes an illegal-instruction exception.
-However, a program can still perform float-point operations in Cartesi machines by using GCC's soft-float implementation.
-This is enabled by default in the standard SDK.
-
-Another way to perform float-point operations is enabling float-point emulation in the RISC-V Proxy Kernel (riscv-pk).
-With float-point emulation, Cartesi machines can perform float-point instructions in userspace.
-There are a few cases in which you might need support to actual float-point instructions.
-For instance, the Golang cross-compiler targeting RISC-V always generates a float-point instruction.
-Beware that enabling float-point emulation will degrade the machine performance.
-
-Follow the steps below to generate the SDK with support to float-point emulation.
-It is necessary to build a modified toolchain, ROM, kernel, and file system.
-No modifications are necessary for the emulator.
-
-Notice that you need two toolchains to build this modified SDK.
-The first one is the same that the standard SDK uses, which supports the rv64ima architecture and the lp64 ABI.
-The second one supports the rv64imafd architecture and the lp64d ABI.
-We need two toolchains because the current version of GCC does not support multiple ABIs for RISC-V ([more details here](https://gcc.gnu.org/bugzilla/show_bug.cgi?id=90419)).
-More information about RISC-V architectures and ABIs can be found [here](https://www.sifive.com/blog/all-aboard-part-1-compiler-args).
-
-```
-make submodules
-make toolchain
-make fd_emulation=yes toolchain
-make fd_emulation=yes rom kernel fs
-make emulator
-```
-
 ## Testing
 
 ```
@@ -162,11 +131,6 @@ Thank you for your interest in Cartesi! Head over to our [Contributing Guideline
 Cartesi!
 
 Please note we have a [Code of Conduct](https://github.com/cartesi/machine-emulator-sdk/blob/master/CODE_OF_CONDUCT.md), please follow it in all your interactions with the project.
-
-## Authors
-
-* *Diego Nehab*
-* *Victor Fusco*
 
 ## License
 
