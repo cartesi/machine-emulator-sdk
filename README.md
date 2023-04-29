@@ -57,6 +57,7 @@ The following options are available to initialize and build the software artifac
 - **tests**: builds the tests binaries (requires toolchain)
 - **fs**: builds the rootfs.ext2 image (requires toolchain)
 - **kernel**: builds the kernel image (requires toolchain)
+- **solidity-step**: builds the machine solidity step (requires toolchain v0.11.0)
 
 If you want to test the emulator you use:
 

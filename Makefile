@@ -47,7 +47,7 @@ UPPER = $(shell echo '$1' | tr '[:lower:]' '[:upper:]')
 
 all:
 	@echo "Usage: make [option]\n"
-	@echo "Options: emulator, rom, tests, fs, kernel or toolchain.\n"
+	@echo "Options: emulator, rom, tests, fs, kernel, toolchain and solidity-step.\n"
 	@echo "eg.: make emulator"
 
 clean: $(SRCCLEAN)
@@ -58,7 +58,7 @@ $(BUILDDIR) $(IMAGES_INSTALL_PATH):
 	mkdir -p $@
 
 submodules:
-	git submodule update --init --recursive emulator fs kernel toolchain rom tests
+	git submodule update --init --recursive emulator fs kernel toolchain rom tests solidity-step
 
 emulator:
 	$(MAKE) -C $@ downloads
@@ -131,6 +131,10 @@ fs kernel:
 toolchain:
 	$(MAKE) -C $@ TOOLCHAIN_TAG=$(TOOLCHAIN_TAG)
 
+solidity-step:
+	cd solidity-step && yarn install
+	$(MAKE) -C $@ generate build
+
 create-symlinks:
 	@ln -svf ../../rom/build/$(ROM_TO_IMAGES) emulator/src/rom.bin
 	@ln -svf ../../fs/$(FS_TO_IMAGES) emulator/src/rootfs.ext2
@@ -146,4 +150,4 @@ install: $(IMAGES_INSTALL_PATH)
 	cd $(IMAGES_INSTALL_PATH) && ln -s $(ROM_TO_IMAGES) rom.bin
 	cd $(IMAGES_INSTALL_PATH) && ln -s $(FS_TO_IMAGES) rootfs.ext2
 
-.PHONY: all submodules clean fs kernel toolchain fs-env kernel-env toolchain-env $(SRCDIRS) $(SRCCLEAN)
+.PHONY: all submodules clean fs kernel toolchain solidity-step fs-env kernel-env toolchain-env $(SRCDIRS) $(SRCCLEAN)

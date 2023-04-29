@@ -16,3 +16,6 @@
 [submodule "toolchain"]
 	path = toolchain
 	url = ../image-toolchain.git
+[submodule "solidity-step"]
+	path = solidity-step
+	url = ../machine-solidity-step.git
