@@ -64,6 +64,7 @@ emulator:
 	$(MAKE) -C $@ downloads
 	$(MAKE) -C $@ dep
 	$(MAKE) -C $@
+	$(MAKE) -C $@ uarch-with-toolchain
 
 rom tests:
 	$(MAKE) -C $@ downloads
