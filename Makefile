@@ -14,9 +14,9 @@
 UNAME:=$(shell uname)
 
 # Containers tags
-TOOLCHAIN_TAG ?= devel
-FS_TAG        ?= devel
-KERNEL_TAG    ?= devel
+TOOLCHAIN_TAG ?= main
+FS_TAG        ?= main
+KERNEL_TAG    ?= main
 
 FS_TOOLCHAIN_TAG     := $(TOOLCHAIN_TAG)
 KERNEL_TOOLCHAIN_TAG := $(TOOLCHAIN_TAG)
