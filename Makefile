@@ -36,7 +36,7 @@ INSTALL_EXEC= $(INSTALL) -m 0755
 INSTALL_DATA= $(INSTALL) -m 0644
 
 FS_TO_IMAGES= rootfs-v0.17.0.ext2
-KERNEL_TO_IMAGES= linux-5.15.63-ctsi-2.bin
+KERNEL_TO_IMAGES= linux-5.15.63-ctsi-2-v0.17.0.bin
 ROM_TO_IMAGES= rom-v0.17.0.bin
 
 SRCDIRS := emulator rom tests
@@ -141,13 +141,13 @@ solidity-step:
 create-symlinks:
 	@ln -svf ../../rom/build/$(ROM_TO_IMAGES) emulator/src/rom.bin
 	@ln -svf ../../fs/$(FS_TO_IMAGES) emulator/src/rootfs.ext2
-	@ln -svf ../../kernel/$(KERNEL_TO_IMAGES) emulator/src/linux.bin
+	@ln -svf ../../kernel/artifacts/$(KERNEL_TO_IMAGES) emulator/src/linux.bin
 
 install: $(IMAGES_INSTALL_PATH)
 	$(MAKE) -C emulator install
 	$(MAKE) -C tests install
 	cd fs && $(INSTALL_DATA) $(FS_TO_IMAGES) $(IMAGES_INSTALL_PATH)
-	cd kernel && $(INSTALL_DATA) $(KERNEL_TO_IMAGES) $(IMAGES_INSTALL_PATH)
+	cd kernel/artifacts && $(INSTALL_DATA) $(KERNEL_TO_IMAGES) $(IMAGES_INSTALL_PATH)
 	cd rom/build && $(INSTALL_DATA) $(ROM_TO_IMAGES) $(IMAGES_INSTALL_PATH)
 	cd $(IMAGES_INSTALL_PATH) && ln -s $(KERNEL_TO_IMAGES) linux.bin
 	cd $(IMAGES_INSTALL_PATH) && ln -s $(ROM_TO_IMAGES) rom.bin
