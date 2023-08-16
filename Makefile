@@ -27,8 +27,8 @@ ROM_TOOLCHAIN_TAG    := $(TOOLCHAIN_TAG)
 TESTS_TOOLCHAIN_TAG  := $(TOOLCHAIN_TAG)
 
 # Install settings
-PREFIX= /opt/cartesi
-SHARE_INSTALL_PATH= $(PREFIX)/share
+PREFIX= /usr
+SHARE_INSTALL_PATH= $(PREFIX)/share/cartesi-machine
 IMAGES_INSTALL_PATH= $(SHARE_INSTALL_PATH)/images
 
 INSTALL= install -p
@@ -47,6 +47,8 @@ CONTAINER_BASE := /opt/cartesi/machine-emulator-sdk
 CONTAINER_MAKE := /usr/bin/make
 
 UPPER = $(shell echo '$1' | tr '[:lower:]' '[:upper:]')
+
+export PREFIX
 
 all:
 	@echo "Usage: make [option]\n"
