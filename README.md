@@ -4,9 +4,6 @@ The Cartesi Machine Emulator SDK repository provides a structured way to build t
 
 - The RISC-V GNU GCC toolchain
 - The Cartesi Machine Emulator
-- The Cartesi Machine Emulator ROM
-- The Emulator Tests
-- The testing root filesystem
 - The testing Linux kernel
 
 For documentation on each of this artifacts please see their own repositories.
@@ -25,14 +22,13 @@ For documentation on each of this artifacts please see their own repositories.
 ```bash
 $ make submodules
 $ make toolchain
-$ make emulator rom tests
+$ make emulator
 ```
 
 If you want to build the root filesystem and the linux kernel you can type:
 
 
 ```bash
-$ make fs
 $ make kernel
 ```
 
@@ -51,9 +47,6 @@ The following options are available to initialize and build the software artifac
 - **submodules**: initialize and update git submodules
 - **toolchain**: builds the RISC-V gnu toolchain docker image
 - **emulator**: builds the emulator
-- **rom**: builds the ROM that is needed by the emulator (requires toolchain)
-- **tests**: builds the tests binaries (requires toolchain)
-- **fs**: builds the rootfs.ext2 image (requires toolchain)
 - **kernel**: builds the kernel image (requires toolchain)
 - **solidity-step**: builds the machine solidity step (requires toolchain v0.11.0)
 
@@ -68,7 +61,6 @@ If you want install the SDK artifacts:
 If you want to use the linux environments you can also use the following targets:
 
 - **toolchain-env**: enters the docker image-toolchain environment
-- **fs-env**: enters the docker image-toolchain environment
 - **kernel-env**: enters the docker image-toolchain environment
 
 #### Makefile container options
@@ -76,23 +68,14 @@ If you want to use the linux environments you can also use the following targets
 You can pass the following variables to the make target if you wish to use different docker image tags.
 
 - TOOLCHAIN\_TAG: image-toolchain image tag
-- FS\_TAG: image-rootfs image tag
 - KERNEL\_TAG: image-kernel image tag
 
 ```
 $ make toolchain TOOLCHAIN_TAG=mytag
-$ make fs TOOLCHAIN_TAG=mytag FS_TAG=mytag
 $ make kernel TOOLCHAIN_TAG=mytag KERNEL_TAG=mytag
 ```
 
-It's also useful if you want to use pre-built images:
-
-```
-$ make rom TOOLCHAIN_TAG=latest
-$ make tests TOOLCHAIN_TAG=latest
-```
-
-Or run an specific version
+It's also useful if you want to use pre-built images or run an specific version:
 
 ```
 $ make toolchain-env TOOLCHAIN_TAG=0.1.1

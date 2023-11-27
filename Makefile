@@ -18,13 +18,9 @@ UNAME:=$(shell uname)
 
 # Containers tags
 TOOLCHAIN_TAG ?= devel
-FS_TAG        ?= devel
 KERNEL_TAG    ?= devel
 
-FS_TOOLCHAIN_TAG     := $(TOOLCHAIN_TAG)
 KERNEL_TOOLCHAIN_TAG := $(TOOLCHAIN_TAG)
-ROM_TOOLCHAIN_TAG    := $(TOOLCHAIN_TAG)
-TESTS_TOOLCHAIN_TAG  := $(TOOLCHAIN_TAG)
 
 # Install settings
 PREFIX= /usr
@@ -35,11 +31,9 @@ INSTALL= install -p
 INSTALL_EXEC= $(INSTALL) -m 0755
 INSTALL_DATA= $(INSTALL) -m 0644
 
-FS_TO_IMAGES= rootfs-v0.18.0.ext2
 KERNEL_TO_IMAGES= linux-5.15.63-ctsi-2-v0.17.0.bin
-ROM_TO_IMAGES= rom-v0.17.0.bin
 
-SRCDIRS := emulator rom tests
+SRCDIRS := emulator
 SRCCLEAN := $(addsuffix .clean,$(SRCDIRS))
 SRCDISTC := $(addsuffix .distclean,$(SRCDIRS))
 
@@ -52,7 +46,7 @@ export PREFIX
 
 all:
 	@echo "Usage: make [option]\n"
-	@echo "Options: emulator, rom, tests, fs, kernel, toolchain and solidity-step.\n"
+	@echo "Options: emulator, kernel, toolchain and solidity-step.\n"
 	@echo "eg.: make emulator"
 
 clean: $(SRCCLEAN)
@@ -63,7 +57,7 @@ $(BUILDDIR) $(IMAGES_INSTALL_PATH):
 	mkdir -p $@
 
 submodules:
-	git submodule update --init --recursive emulator fs kernel toolchain rom tests solidity-step
+	git submodule update --init --recursive emulator kernel toolchain solidity-step
 
 emulator:
 	$(MAKE) -C $@ downloads
@@ -71,30 +65,14 @@ emulator:
 	$(MAKE) -C $@
 	$(MAKE) -C $@ uarch-with-linux-env
 
-rom tests:
-	$(MAKE) -C $@ downloads
-	$(MAKE) toolchain-exec \
-	    TOOLCHAIN_TAG=$($(call UPPER,$@)_TOOLCHAIN_TAG) \
-	    CONTAINER_COMMAND="$(CONTAINER_MAKE) build-$@"
-
 $(SRCCLEAN): %.clean:
 	$(MAKE) -C $* clean
 
 $(SRCDISTC): %.distclean:
 	$(MAKE) -C $* distclean
 
-build-rom:
-	cd rom && \
-	    make dep && \
-	    make
-
-build-tests:
-	cd tests && \
-	    $(MAKE) dep && \
-	    $(MAKE)
-
 run-tests:
-	$(MAKE) -C emulator test TEST_PATH=`pwd`/tests/build
+	$(MAKE) -C emulator test
 
 fs-env:
 	@docker run --hostname $@ -it --rm \
@@ -128,7 +106,7 @@ toolchain-exec:
 		-w $(CONTAINER_BASE) \
 		cartesi/toolchain:$(TOOLCHAIN_TAG) $(CONTAINER_COMMAND)
 
-fs kernel:
+kernel:
 	$(MAKE) -C $@ \
 	    TAG=$($(call UPPER,$@)_TAG) \
 	    TOOLCHAIN_TAG=$($(call UPPER,$@)_TOOLCHAIN_TAG)
@@ -141,18 +119,11 @@ solidity-step:
 	$(MAKE) -C $@ generate build
 
 create-symlinks:
-	@ln -svf ../../rom/build/$(ROM_TO_IMAGES) emulator/src/rom.bin
-	@ln -svf ../../fs/$(FS_TO_IMAGES) emulator/src/rootfs.ext2
 	@ln -svf ../../kernel/artifacts/$(KERNEL_TO_IMAGES) emulator/src/linux.bin
 
 install: $(IMAGES_INSTALL_PATH)
 	$(MAKE) -C emulator install
-	$(MAKE) -C tests install
-	cd fs && $(INSTALL_DATA) $(FS_TO_IMAGES) $(IMAGES_INSTALL_PATH)
 	cd kernel/artifacts && $(INSTALL_DATA) $(KERNEL_TO_IMAGES) $(IMAGES_INSTALL_PATH)
-	cd rom/build && $(INSTALL_DATA) $(ROM_TO_IMAGES) $(IMAGES_INSTALL_PATH)
 	cd $(IMAGES_INSTALL_PATH) && ln -s $(KERNEL_TO_IMAGES) linux.bin
-	cd $(IMAGES_INSTALL_PATH) && ln -s $(ROM_TO_IMAGES) rom.bin
-	cd $(IMAGES_INSTALL_PATH) && ln -s $(FS_TO_IMAGES) rootfs.ext2
 
-.PHONY: all submodules clean fs kernel toolchain solidity-step fs-env kernel-env toolchain-env $(SRCDIRS) $(SRCCLEAN)
+.PHONY: all submodules clean kernel toolchain solidity-step kernel-env toolchain-env $(SRCDIRS) $(SRCCLEAN)

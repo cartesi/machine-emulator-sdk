@@ -1,15 +1,6 @@
 [submodule "emulator"]
 	path = emulator
 	url = ../machine-emulator.git
-[submodule "rom"]
-	path = rom
-	url = ../machine-emulator-rom.git
-[submodule "tests"]
-	path = tests
-	url = ../machine-tests.git
-[submodule "fs"]
-	path = fs
-	url = ../image-rootfs.git
 [submodule "kernel"]
 	path = kernel
 	url = ../image-kernel.git
