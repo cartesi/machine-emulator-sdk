@@ -10,3 +10,6 @@
 [submodule "solidity-step"]
 	path = solidity-step
 	url = ../machine-solidity-step.git
+[submodule "machine-emulator-tools"]
+	path = tools
+	url = ../machine-emulator-tools.git

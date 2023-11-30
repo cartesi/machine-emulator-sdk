@@ -31,6 +31,7 @@ INSTALL= install -p
 INSTALL_EXEC= $(INSTALL) -m 0755
 INSTALL_DATA= $(INSTALL) -m 0644
 
+TOOLS_TO_IMAGES= rootfs-tools-v0.14.1.ext2
 KERNEL_TO_IMAGES= linux-5.15.63-ctsi-2-v0.17.0.bin
 
 SRCDIRS := emulator
@@ -46,7 +47,7 @@ export PREFIX
 
 all:
 	@echo "Usage: make [option]\n"
-	@echo "Options: emulator, kernel, toolchain and solidity-step.\n"
+	@echo "Options: toolchain, kernel, tools, emulator and solidity-step.\n"
 	@echo "eg.: make emulator"
 
 clean: $(SRCCLEAN)
@@ -57,7 +58,7 @@ $(BUILDDIR) $(IMAGES_INSTALL_PATH):
 	mkdir -p $@
 
 submodules:
-	git submodule update --init --recursive emulator kernel toolchain solidity-step
+	git submodule update --init --recursive emulator kernel toolchain solidity-step tools
 
 emulator:
 	$(MAKE) -C $@ downloads
@@ -111,6 +112,9 @@ kernel:
 	    TAG=$($(call UPPER,$@)_TAG) \
 	    TOOLCHAIN_TAG=$($(call UPPER,$@)_TOOLCHAIN_TAG)
 
+tools:
+	$(MAKE) -C $@
+
 toolchain:
 	$(MAKE) -C $@ TOOLCHAIN_TAG=$(TOOLCHAIN_TAG)
 
@@ -119,11 +123,14 @@ solidity-step:
 	$(MAKE) -C $@ generate build
 
 create-symlinks:
+	@ln -svf ../../tools/$(TOOLS_TO_IMAGES) emulator/src/rootfs.ext2
 	@ln -svf ../../kernel/artifacts/$(KERNEL_TO_IMAGES) emulator/src/linux.bin
 
 install: $(IMAGES_INSTALL_PATH)
 	$(MAKE) -C emulator install
 	cd kernel/artifacts && $(INSTALL_DATA) $(KERNEL_TO_IMAGES) $(IMAGES_INSTALL_PATH)
+	cd tools && $(INSTALL_DATA) $(TOOLS_TO_IMAGES) $(IMAGES_INSTALL_PATH)
 	cd $(IMAGES_INSTALL_PATH) && ln -s $(KERNEL_TO_IMAGES) linux.bin
+	cd $(IMAGES_INSTALL_PATH) && ln -s $(TOOLS_TO_IMAGES) rootfs.ext2
 
-.PHONY: all submodules clean kernel toolchain solidity-step kernel-env toolchain-env $(SRCDIRS) $(SRCCLEAN)
+.PHONY: all submodules clean kernel toolchain tools solidity-step kernel-env toolchain-env $(SRCDIRS) $(SRCCLEAN)
