@@ -32,7 +32,7 @@ INSTALL_EXEC= $(INSTALL) -m 0755
 INSTALL_DATA= $(INSTALL) -m 0644
 
 TOOLS_TO_IMAGES= rootfs-tools-v0.14.1.ext2
-KERNEL_TO_IMAGES= linux-5.15.63-ctsi-2-v0.17.0.bin
+KERNEL_TO_IMAGES= linux-6.5.9-ctsi-1-v0.19.1.bin
 
 SRCDIRS := emulator
 SRCCLEAN := $(addsuffix .clean,$(SRCDIRS))
