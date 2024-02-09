@@ -23,7 +23,7 @@ KERNEL_TAG    ?= devel
 KERNEL_TOOLCHAIN_TAG := $(TOOLCHAIN_TAG)
 
 # Install settings
-PREFIX= /usr
+PREFIX?= /usr
 SHARE_INSTALL_PATH= $(PREFIX)/share/cartesi-machine
 IMAGES_INSTALL_PATH= $(SHARE_INSTALL_PATH)/images
 
@@ -61,10 +61,7 @@ submodules:
 	git submodule update --init --recursive emulator kernel toolchain solidity-step tools
 
 emulator:
-	$(MAKE) -C $@ downloads
-	$(MAKE) -C $@ dep
 	$(MAKE) -C $@
-	$(MAKE) -C $@ uarch-with-linux-env
 
 $(SRCCLEAN): %.clean:
 	$(MAKE) -C $* clean
@@ -73,13 +70,8 @@ $(SRCDISTC): %.distclean:
 	$(MAKE) -C $* distclean
 
 run-tests:
+	$(MAKE) -C emulator build-tests-all
 	$(MAKE) -C emulator test
-
-fs-env:
-	@docker run --hostname $@ -it --rm \
-		-v `pwd`:$(CONTAINER_BASE) \
-		-w $(CONTAINER_BASE) \
-		cartesi/image-rootfs:$(FS_TAG) $(CONTAINER_COMMAND)
 
 kernel-env:
 	@docker run --hostname $@ -it --rm \
