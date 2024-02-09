@@ -20,7 +20,7 @@ For documentation on each of this artifacts please see their own repositories.
 ### Build
 
 ```bash
-$ make submodules
+$ git clone --recurse-submodules https://github.com/cartesi/machine-emulator-sdk.git
 $ make toolchain
 $ make emulator
 ```
@@ -29,6 +29,7 @@ If you want to build the root filesystem and the linux kernel you can type:
 
 
 ```bash
+$ make tools
 $ make kernel
 ```
 
@@ -46,9 +47,10 @@ The following options are available to initialize and build the software artifac
 
 - **submodules**: initialize and update git submodules
 - **toolchain**: builds the RISC-V gnu toolchain docker image
-- **emulator**: builds the emulator
+- **emulator**: builds the emulator (requires toolchain)
+- **tools**: builds the machine-emulator-tools and rootfs
 - **kernel**: builds the kernel image (requires toolchain)
-- **solidity-step**: builds the machine solidity step (requires toolchain v0.11.0)
+- **solidity-step**: builds the machine solidity step
 
 If you want to test the emulator you use:
 
