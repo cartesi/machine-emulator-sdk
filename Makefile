@@ -111,8 +111,7 @@ toolchain:
 	$(MAKE) -C $@ TOOLCHAIN_TAG=$(TOOLCHAIN_TAG)
 
 solidity-step:
-	cd solidity-step && yarn install
-	$(MAKE) -C $@ generate build
+	$(MAKE) -C $@ build
 
 create-symlinks:
 	@ln -svf ../../tools/$(TOOLS_TO_IMAGES) emulator/src/rootfs.ext2
