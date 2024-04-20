@@ -31,7 +31,7 @@ INSTALL= install -p
 INSTALL_EXEC= $(INSTALL) -m 0755
 INSTALL_DATA= $(INSTALL) -m 0644
 
-TOOLS_TO_IMAGES= rootfs-tools-v0.14.1.ext2
+TOOLS_TO_IMAGES= rootfs-tools-v0.15.0.ext2
 KERNEL_TO_IMAGES= linux-6.5.13-ctsi-1-v0.20.0.bin
 
 SRCDIRS := emulator
