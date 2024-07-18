@@ -50,6 +50,18 @@ all:
 	@echo "Options: toolchain, kernel, tools, emulator and solidity-step.\n"
 	@echo "eg.: make emulator"
 
+export REPO_DIR := releases
+prepare-release:
+	@for V in 0.18.0; do \
+		wget -P $$REPO_DIR/$$V -i versions/$$V; \
+		sha256sum $$REPO_DIR/$$V/* > $$REPO_DIR/$$V.sha256; \
+	done
+
+	@for V in 0.18.0; do \
+		cd $$REPO_DIR/$$V && dpkg-scanpackages --multiversion . /dev/null | xz -c > Packages.xz; \
+	done
+
+
 clean: $(SRCCLEAN)
 
 distclean: $(SRCDISTC)
