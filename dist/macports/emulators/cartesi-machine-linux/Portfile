@@ -1,0 +1,34 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+
+name                cartesi-machine-linux
+categories          emulators
+version             0.20.0
+master_sites        https://github.com/cartesi/image-kernel/releases/download/v${version}/
+distname            linux-6.5.13-ctsi-1-v${version}
+extract.suffix      .bin
+maintainers         @cartesi/emulator \
+                    @diegonehab
+license             GPL-2
+supported_archs     noarch
+platforms           any
+description         Linux kernel for the Cartesi Machine Emulator
+long_description    \
+    The Linux kernel for the Cartesi Machine Emulator provides a default \
+    kernel that can be used to boot Linux in the emulator.
+homepage            https://github.com/cartesi/image-kernel
+checksums           rmd160 4a4f9215f199a86fa7a41b85b9142cdc09e3d624 \
+                    sha256 65dd100ff6204346ac2f50f772721358b5c1451450ceb39a154542ee27b4c947 \
+                    size   17529704
+use_configure       no
+build               {}
+destroot {
+    xinstall -d ${destroot}${prefix}/share/cartesi-machine/images
+    xinstall -W ${distpath} -m 0644 \
+                    ${distname}${extract.suffix} \
+                    ${destroot}${prefix}/share/cartesi-machine/images
+    ln -s ${distname}${extract.suffix} \
+                    ${destroot}${prefix}/share/cartesi-machine/images/linux${extract.suffix}
+}
+livecheck.type      none
