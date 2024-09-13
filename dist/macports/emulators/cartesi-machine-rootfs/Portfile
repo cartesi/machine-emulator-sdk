@@ -1,0 +1,41 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+
+name                cartesi-machine-rootfs
+categories          emulators
+version             0.16.2
+master_sites        https://github.com/cartesi/machine-emulator-tools/releases/download/v${version}-test1/
+distname            rootfs-tools-v${version}
+extract.suffix      .ext2
+maintainers         @cartesi/emulator \
+                    @diegonehab
+license             Apache-2
+supported_archs     noarch
+platforms           any
+description         Root filesystem for the Cartesi Machine Emulator
+long_description    \
+    The root filesystem for the Cartesi Machine Emulator provides a default \
+    filesystem that can be used to boot Linux in the emulator. \
+    \
+    This package installs what is, essentially, a Docker image converted to an \
+    ext2 filesystem image. The license shown for the package is what amounts to \
+    the license of the associated Dockerfile. The image, in contrast, includes a \
+    variety of packages, each with its own license. To see a list of packages in \
+    the ext2 filesystem image and their corresponding licenses, please see the \
+    /etc/LICENSES file that is inside the filesystem image itself.
+homepage            https://github.com/cartesi/machine-emulator-tools
+checksums           rmd160 8ec1e90a7020d22cd6270b9978ad35c4fbb6595f \
+                    sha256 bf82f702229cea00156a2306149f018dc5aab85f176846a1b06a4bee561f72a3 \
+                    size   104857600
+use_configure       no
+build               {}
+destroot {
+    xinstall -d ${destroot}${prefix}/share/cartesi-machine/images
+    xinstall -W ${distpath} -m 0644 \
+                    ${distname}${extract.suffix} \
+                    ${destroot}${prefix}/share/cartesi-machine/images
+    ln -s ${distname}${extract.suffix} \
+                    ${destroot}${prefix}/share/cartesi-machine/images/rootfs${extract.suffix}
+}
+livecheck.type      none
